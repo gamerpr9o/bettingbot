@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, get, update, remove, onValue, child } from "firebase/database";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1488773412091330630/EPNlMmKfgvl5Ex7PB1InFm3uGPpWnRg0-9r_KzDj4AIE270tduFP6cEYN0cN3YHXCu9b"; // <── replace with your webhook
+const DISCORD_WEBHOOK = "YOUR_DISCORD_WEBHOOK_URL"; // <── replace with your webhook
 const ADMIN_KEY = "ADMIN-SECRET-2024"; // <── change this to your secret admin key
 
 // ─── FIREBASE CONFIG ──────────────────────────────────────────────────────────
@@ -16,7 +16,6 @@ const firebaseConfig = {
   storageBucket: "bettingbot-ca973.firebasestorage.app",
   messagingSenderId: "485350620703",
   appId: "1:485350620703:web:9db4a712e30428b2e39f2a",
-  measurementId: "G-327B0PJ3MP"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -109,7 +108,7 @@ const STRATEGIES = [
 
 // ─── DISCORD ──────────────────────────────────────────────────────────────────
 async function sendDiscord(content) {
-  if (!DISCORD_WEBHOOK || DISCORD_WEBHOOK === "https://discord.com/api/webhooks/1488773412091330630/EPNlMmKfgvl5Ex7PB1InFm3uGPpWnRg0-9r_KzDj4AIE270tduFP6cEYN0cN3YHXCu9b") return;
+  if (!DISCORD_WEBHOOK || DISCORD_WEBHOOK === "YOUR_DISCORD_WEBHOOK_URL") return;
   try {
     await fetch(DISCORD_WEBHOOK, {
       method: "POST",
@@ -1180,7 +1179,7 @@ function AdminPanel({ onClose }) {
 function Dashboard({ account: initAccount, keyVal, onLogout }) {
   const [account, setAccount] = useState(initAccount);
   const [tab, setTab] = useState("overview");
-  const [settings, setSettings] = useState(initAccount.settings);
+  const [settings, setSettings] = useState(initAccount.settings || { stake:10, maxDailyBets:20, stopLoss:100, targetProfit:200, autoRestart:true, stealth:false, sites:[], strategy:'value', oddsMin:1.5, oddsMax:5.0, betDelay:3, notifications:true, vpn:false, currency:'USD' });
   const [saved, setSaved] = useState(false);
   const [sending, setSending] = useState(false);
 
@@ -1231,7 +1230,7 @@ function Dashboard({ account: initAccount, keyVal, onLogout }) {
     }));
   };
 
-  const stats = account.stats;
+  const stats = account.stats || { balance:1000, todayProfit:0, totalProfit:0, totalBets:0, wonBets:0, lostBets:0, winRate:0, avgOdds:0, streak:0, bestDay:0, worstDay:0, roi:0, volume:0, openBets:0, pendingProfit:0 };
   const reports = account.dailyReports || [];
 
   const TABS = [
